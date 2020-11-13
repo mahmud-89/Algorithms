@@ -9,193 +9,189 @@ package DataStructure.Lists;
  *
  * @author promise
  */
-public class SinglyLinkedList {
+public class SinglyLinkedList implements ISinglyFeatures {
 
-    private int size;
+    class Node {
+
+        int value;
+        Node next;
+
+        Node(int value) {
+            this.value = value;
+        }
+    }
+
     private Node head;
+    private int size;
 
     public SinglyLinkedList() {
-        this.size = 0;
         this.head = null;
-    }   
+        this.size = 0;
+    }
 
-    public void insert(int value) {
+    @Override
+    public void insertHead(int value) {
         Node newNode = new Node(value);
         if (head == null) {
             head = newNode;
             size++;
-        } else {
-            Node toInsert = head;
-            while (toInsert.next != null) {
-                toInsert = toInsert.next;
-            }
-            toInsert.next = newNode;
-            size++;
-        }
-    }
-
-    public void insertNth(int position, int value) {
-        if (boundaryCheck(position)) {
             return;
         }
-        System.out.println(String.format("inserting value %d at position %d", value, position));
+        newNode.next = head;
+        head = newNode;
+        size++;
+    }
+
+    @Override
+    public void insertTail(int value) {
         Node newNode = new Node(value);
-        if (position == 1) {
-            newNode.next = head;
+        if (head == null) {
             head = newNode;
             size++;
-        } else {
-            Node temp = head;
-            for (int i = 1; i < position - 1; i++) {
-                temp = temp.next;
-            }
-            Node inNode = temp.next;
-            temp.next = newNode;
-            newNode.next = inNode;
-            size++;
-        }
-    }
-
-    public void deleteNth(int position) {
-        if (boundaryCheck(position)) {
             return;
         }
-
-        if (position == 1) {
-            Node temp = head;
-            head = head.next;
-            System.out.println(String.format("%d is deleted from postion %d", temp.value, position));
-            size--;
-        } else {
-            Node temp = head;
-            for (int i = 1; i < position - 1; i++) {
-                temp = temp.next;
-            }
-            Node destroy = temp.next;
-            System.out.println(String.format("%d is deleted from postion %d", destroy.value, position));
-            temp.next = temp.next.next;
+        Node cur = head;
+        while (cur.next != null) {
+            cur = cur.next;
         }
-
+        cur.next = newNode;
+        size++;
     }
 
+    @Override
+    public void insertNth(int value, int index) {
+        if (index > size() || index < 0) {
+            throw new IndexOutOfBoundsException("position: " + index + " size: " + size());
+        }
+
+        Node newNode = new Node(value);
+        if (index == 0) {
+            insertHead(value);
+            return;
+        } else if (index == size()) {
+            insertTail(value);
+            return;
+        }
+        Node cur = head;
+        for (int i = 0; i < index - 1; i++) {
+            cur = cur.next;
+        }
+        newNode.next = cur.next;
+        cur.next = newNode;
+        size++;
+    }
+
+    @Override
+    public void deleteHead() {
+        if (isEmpty()) {
+            throw new NullPointerException("list is empty");
+        }
+        head = head.next;
+        size--;
+    }
+
+    @Override
+    public void deleteTail() {
+        if (isEmpty()) {
+            throw new NullPointerException("the list is empty");
+        }
+        Node cur = head;
+        for (int i = 0; i < size() - 2; i++) {
+            cur = cur.next;
+        }
+        cur.next = null;
+        size--;
+    }
+
+    @Override
+    public void deleteNth(int index) {
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException("index : " + index + " size: " + size());
+        }
+        if(index == 0){
+            deleteHead();
+            return;
+        }else if(index == size()-1){
+            deleteTail();
+            return;
+        }
+        Node cur = head;
+        for(int i = 0;i<index-1;i++){
+            cur = cur.next;
+        }
+        cur.next =cur.next.next;
+        size--;
+    }
+
+    @Override
+    public void clear() {
+        head = null;
+        size = 0;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    @Override
     public int size() {
         return this.size;
     }
 
-    public boolean isEmpty() {
-        return size() == 0;
-    }
-
-    public void print() {
-        Node temp = head;
-        if (temp == null) {
-            System.out.println("there is no element in the list");
-        } else {
-            System.out.println("Current list elements are:");
-            while (temp.next != null) {
-                System.out.println(temp.value);
-                temp = temp.next;
-            }
-            System.out.println(temp.value);
-        }
-
-        System.out.println("current size: " + size());
-        System.out.println("");
-    }
-
-    public boolean search(int value) {
-        Node temp = head;
-        while (temp != null) {
-            if (temp.value == value) {
+    @Override
+    public boolean search(int key) {
+        Node cur = head;
+        while (cur != null) {
+            if (cur.value == key) {
                 return true;
             }
-            temp = temp.next;
+            cur = cur.next;
         }
         return false;
     }
 
-    public boolean boundaryCheck(int position) {
-        if (position < 1 || position > size()) {
-            System.out.println("Invalid position! please input correct position");
-            return true;
-        }
-        return false;
-    }
-    
-    public Node getHead(){
-        return this.head;
-    }
-    
-    public Node getNode(int position){
-        validatePosition(position,0,size());
-        Node cur = head;
-        for(int i = 1;i<position-1;i++){
-            cur = cur.next;
-        }
-        System.out.println(String.format("%d is found from position %d", cur.next.value,position));
-        return cur.next;
-    }
-    
-    public void validatePosition(int position,int low,int high){
-        if(position<low || position>high){
-            throw new IndexOutOfBoundsException(position+" ");
-        }
-    }
-    
     @Override
-    public String toString(){
-        if(size == 0){
-            return "";
+    public int getNthValue(int index) {
+        if (index > size() || index < 0) {
+            throw new IndexOutOfBoundsException("index: " + index + " size: " + size());
         }
-        StringBuilder builder = new StringBuilder();
         Node cur = head;
-        while(cur!=null){
-            builder.append(cur.value).append("->");
+        for (int i = 0; i < index; i++) {
             cur = cur.next;
         }
-//        return builder.replace(builder.length()-2, builder.length(), "").toString();
-        return builder.replace(builder.length()-1, builder.length(), "").toString();
+        return cur.value;
     }
-    
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        Node cur = head;
+        if (!isEmpty()) {
+            while (cur != null) {
+                sb.append(cur.value).append("->");
+                cur = cur.next;
+            }
+            return sb.replace(sb.length() - 2, sb.length(), "").toString();
+        }
+        return "empty list";
+    }
 
     public static void main(String[] args) {
         SinglyLinkedList sll = new SinglyLinkedList();
-        sll.insert(10);
-        sll.insert(20);
-        sll.insert(30);
-        sll.insert(40);
+        sll.insertHead(10);
+        sll.insertHead(20);
+        sll.insertTail(30);
+        sll.insertNth(40, 1);
         System.out.println(sll.toString());
-        System.out.println("");
-        sll.print();
+        System.out.println("size: " + sll.size());
 
-        sll.deleteNth(sll.size());
-        sll.print();
+        sll.deleteTail();
+        sll.deleteNth(2);
+        System.out.println(sll.toString());
+        sll.clear();
 
-        sll.insertNth(sll.size(), 25);
-        sll.print();
-
-        System.out.println("isEmpty: " + sll.isEmpty());
-        sll.getNode(3);
+        System.out.println(sll.toString());
 
     }
-
-}
-
-class Node {
-
-    int value;
-    Node next;
-
-    Node() {
-    }
-
-    Node(int value) {
-        this(value, null);
-    }
-
-    public Node(int value, Node next) {
-        this.value = value;
-        this.next = next;
-    }
-
 }
