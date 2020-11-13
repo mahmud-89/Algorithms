@@ -10,20 +10,15 @@ package DataStructure.Lists;
  * @author promise
  */
 public interface ISinglyFeatures {
-    void insertHead();
-    void insert(); //to tail
-    void insertNth(int data,int position);
+    void insertHead(int value);
+    void insertTail(int vlaue); //to tail
+    void insertNth(int value,int index);
     void deleteHead();
-    void delete(); //from tail
-    void deleteNth(int position);
+    void deleteTail(); //from tail
+    void deleteNth(int index);
     void clear();
     boolean isEmpty();
     int size();
-    Node getHead();
     boolean search(int key);
-    int getNth(int index);
-    
-    @Override
-    String toString();
-   
+    int getNthValue(int index);
 }
