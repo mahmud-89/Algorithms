@@ -22,4 +22,6 @@ public interface IDoublyFeatures{
     int getHead();
     int getTail();
     int size();
+    boolean isEmpty();
+    void clearList();
 }

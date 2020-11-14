@@ -9,70 +9,57 @@ package DataStructure.Lists;
  *
  * @author promise
  */
-public class DoublyLinkedList {
+public class DoublyLinkedList implements IDoublyFeatures {
 
-    class Link {
+    class Node {
 
         int value;
-        Link next;
-        Link prev;
+        Node next;
+        Node prev;
 
-        public Link() {
-        }
-
-        public Link(int value) {
+        public Node(int value) {
             this.value = value;
-            next = null;
-            prev = null;
         }
+
     }
 
-    private Link head;
-    private Link tail;
     private int size;
+    private Node head;
+    private Node tail;
 
-    public DoublyLinkedList() {
-        this.head = null;
-        this.tail = null;
-        this.size = 0;
-    }
-
-    /**
-     * ----------------- Insert operation -----------------------------
-     *
-     * @param value
-     */
+    @Override
     public void insertHead(int value) {
-        Link newLink = new Link(value);
-        if (isEmpty()) {
-            head = tail = newLink;
-            head.prev = null;
-            tail.next = null;
+        Node newNode = new Node(value);
+        if (head == null) {
+            head = tail = newNode;
+            head.prev = tail.next = null;
             size++;
             return;
         }
-        head.prev = newLink;
-        newLink.next = head;
-        newLink.prev = null;
-        head = newLink;
+        head.prev = newNode;
+        newNode.next = head;
+        newNode.prev = null;
+        head = newNode;
         size++;
     }
 
+    @Override
     public void insertTail(int value) {
-        Link newLink = new Link(value);
+        Node newNode = new Node(value);
         if (isEmpty()) {
             insertHead(value);
             return;
         }
-        tail.next = newLink;
-        newLink.prev = tail;
-        newLink.next = null;
-        tail = newLink;
+        tail.next = newNode;
+        newNode.prev = tail;
+        newNode.next = null;
+        tail = newNode;
         size++;
     }
 
+    @Override
     public void insertNth(int index, int value) {
-        if (index > size() || index <= 0) {
+        if (index > size() || index < 0) {
             throw new IndexOutOfBoundsException("index: " + index + " size: " + size());
         }
         if (index == 0) {
@@ -82,211 +69,192 @@ public class DoublyLinkedList {
             insertTail(value);
             return;
         }
-        Link newLink = new Link(value);
-        Link cur = head;
+        Node newNode = new Node(value);
+        Node cur = head;
         for (int i = 0; i < index - 1; i++) {
             cur = cur.next;
         }
-        newLink.prev = cur;
-        newLink.next = cur.next;
-        cur.next.prev = newLink;
-        cur.next = newLink;
+        cur.next = cur.next.next;
+        cur.next.next.prev = cur;
         size++;
     }
 
+    @Override
     public void insertOrdered(int value) {
-        Link cur = head;
-        int counter = -1;
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void deleteHead() {
+        if(head == null) {
+            throw  new NullPointerException("empty list");
+        }
+        head = head.next;
+        if(head == null){
+            tail = null;
+        }else{
+            head.prev = null;
+        }
+        size--;
+    }
+
+    @Override
+    public void deleteTail() {
+        if(isEmpty()) throw new NullPointerException("Empty list! ");
+        tail = tail.prev;
+        if(tail == null){
+            head = null;
+        }else {
+            tail.next = null;
+        }
+        size--;
+    }
+
+    @Override
+    public void deleteNth(int index) {
+        if(index >=size() || index < 0){
+            throw new IndexOutOfBoundsException("input index is not in range of the list");
+        }
+        if(index == 0){
+            deleteHead();
+            return;
+        }else if(index == size()-1){
+            deleteTail();
+            return;
+        }
+        Node cur = head;
+        for(int i = 0;i<index-1;i++){
+            cur = cur.next;
+        }
+        cur.next = cur.next.next;
+        cur.next.prev = cur;
+        size--;
+    }
+
+    @Override
+    public void deleteValue(int searchValue) {
+        Node cur = head;
+        
+        while(cur.value != searchValue){
+            if(cur != tail){
+                cur = cur.next;
+            }else{
+                throw new RuntimeException("the element is not found in the list");
+            }
+        }
+        
+        if(cur == head) deleteHead();
+        else if (cur == tail) deleteTail();
+        else{
+            cur.prev.next = cur.next;
+            cur.prev = cur;
+            size--;
+        }
        
         
     }
 
-    /**
-     * ------------------ Delete operation---------------------------
-     *
-     * @return
-     */
-    public void deleteHead() {
-        if (isEmpty()) {
-            throw new NullPointerException("no element available in the list");
-        }
-        System.out.println(String.format("%d is deleted from head", head.value));
-        head = head.next;
-        head.prev = null;
-        size--;
-    }
-
-    public void deleteTail() {
-        if (isEmpty()) {
-            throw new NullPointerException("no element available in the list");
-        }
-        System.out.println(String.format("%d is deleted from tail", tail.value));
-        tail = tail.prev;
-        tail.next = null;
-        size--;
-    }
-
-    public void deleteNth(int index) {
-        if (index >= size() || index < 0) {
-            throw new IndexOutOfBoundsException("index: " + index + " size" + size());
-        }
-
-        if (index == 0) {
-            deleteHead();
-            return;
-        } else if (index == size() - 1) {
-            deleteTail();
-            return;
-        }
-        Link cur = head;
-        for (int i = 0; i < index - 1; i++) {
-            cur = cur.next;
-        }
-        cur.next.next.prev = cur;
-        cur.next = cur.next.next;
-        size--;
-    }
-
-    public void deleteValue(int value) {
-        if (head.value == value) {
-            deleteHead();
-            return;
-        } else if (tail.value == value) {
-            deleteTail();
-            return;
-        }
-        Link cur = head;
-        boolean flag = false;
-        while (cur.next != null) {
-            if (cur.next.value == value) {
-                cur.next.next.prev = cur;
-                cur.next = cur.next.next;
-                size--;
-                flag = true;
-            }
-            cur = cur.next;
-        }
-        if (!flag) {
-            System.out.println("the value is not in the list");
-        }
-    }
-
-    /**
-     * ------------- Utility methods --------------------
-     *
-     * @return
-     */
+    @Override
     public int getValue(int index) {
-        if (index >= size() || index < 0) {
-            throw new IndexOutOfBoundsException("index: " + index + " size:" + size());
-        }
-        if (index == 0) {
-            return getHead();
-        } else if (index == size() - 1) {
-            return getTail();
-        }
-        Link cur = head;
-        for (int i = 0; i < index; i++) {
+        Node cur = head;
+        for(int i = 0;i<index;i++){
             cur = cur.next;
         }
         return cur.value;
     }
 
+    @Override
     public int getHead() {
-        return this.head.value;
+        if(!isEmpty()){
+            return head.value;
+        }
+        throw new NullPointerException("empty list");
     }
 
+    @Override
     public int getTail() {
-        return this.tail.value;
+        if(!isEmpty()){
+            return tail.value;
+        }
+        throw new NullPointerException("Empty list");
     }
 
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
+    @Override
     public int size() {
         return this.size;
+    }
+    
+    @Override
+    public boolean isEmpty(){
+        return size == 0;
+    }
+    
+    @Override
+    public void clearList(){
+        head = null;
+        tail = null;
+        size = 0;
     }
 
     @Override
     public String toString() {
-        if (size() == 0) {
-            return "";
-        }
         StringBuilder sb = new StringBuilder();
-        Link cur = head;
-        while (cur != null) {
-            sb.append(cur.value).append("->");
-            cur = cur.next;
+        if (head != null) {
+            Node cur = head;
+            while (cur != null) {
+                sb.append(cur.value).append("->");
+                cur = cur.next;
+            }
+            return sb.replace(sb.length() - 2, sb.length(), "").toString();
         }
-        return sb.replace(sb.length() - 2, sb.length(), "").toString();
+        return "list is empty";
     }
 
-    public void display() {
-        Link cur = head;
-        while (cur != null) {
-            System.out.print(cur.value + " ");
-            cur = cur.next;
+    public String reversePrint() {
+        StringBuilder sb = new StringBuilder();
+        Node cur = tail;
+        if (head != null) {
+            while (cur != null) {
+                sb.append(cur.value).append("->");
+                cur = cur.prev;
+            }
+            return sb.replace(sb.length() - 2, sb.length(), "").toString();
         }
-        System.out.println("");
-        cur = head;
+        return "list is empty";
     }
 
-    public static void main(String[] s) {
+    public static void main(String[] args) {
         DoublyLinkedList dll = new DoublyLinkedList();
-        System.out.println("\n\nInsert operation:");
-        System.out.println("insert value in head: ");
-        dll.insertHead(10);
+        
         dll.insertHead(20);
         dll.insertHead(30);
+        dll.insertTail(40);
+        dll.insertNth(3, 10);
         System.out.println(dll.toString());
-
-        System.out.println("size of the list: " + dll.size());
-        System.out.println("extracting head value:" + dll.getHead());
-        System.out.println("extracting value with index :" + dll.getValue(2));
-
-        System.out.println("insert value in tail: ");
-        dll.insertTail(100);
-        dll.insertTail(200);
-        dll.insertTail(300);
+        //dll.deleteHead();
+        //dll.deleteHead();
+        //dll.deleteHead();
+        //dll.deleteHead();
+       // dll.deleteTail();
+        //dll.deleteTail();
+       
+       // dll.deleteNth(0);
+        //dll.deleteNth(0);
+        //dll.deleteNth(0);
+        //dll.deleteNth(0);
+        dll.deleteValue(10);
+        dll.deleteValue(30);
+        dll.deleteValue(20);
+        //dll.deleteValue(40);
+        System.out.println(dll.getHead());
+        System.out.println(dll.getTail());
+        System.out.println("size of the list: "+dll.size());
+        
         System.out.println(dll.toString());
-        System.out.println("size of the list: " + dll.size());
-
-//        System.out.println("extracting tail value: " + dll.getTail());
-//
-//        int index = dll.size()-1;
-//        System.out.printf("inserting value at position %d\n", index);
-//        dll.insertNth(index, 2);
-//        System.out.println(dll.toString());
-//
-//        System.out.println("size of the list is " + dll.size());
-//
-//        System.out.println("\nDelete operation:");
-//        System.out.println(dll.toString());
-//        dll.deleteHead();
-//        System.out.println(dll.toString());
-//        System.out.println(dll.size());
-//        
-//        
-//        System.out.println("tail of list is : " + dll.getTail());
-//
-//        dll.deleteTail();
-//        dll.deleteHead();
-//        System.out.println(dll.toString());
-//        System.out.println("size of the list is " + dll.size());
-//
-//        System.out.println("\ndeleting nTh position: ");
-//        System.out.println(dll.toString());
-//        dll.deleteNth(2);
-//        System.out.println(dll.toString());
-//        System.out.println("size of the list: "+dll.size());
-//        
-//        System.out.println("deleting specific value from list:");
-//        dll.deleteValue(20);
-//        System.out.println(dll.toString());
-//        System.out.println("size of the list: "+ dll.size());
+        System.out.println(dll.reversePrint());
         
         
-
+        
+        
     }
 }
