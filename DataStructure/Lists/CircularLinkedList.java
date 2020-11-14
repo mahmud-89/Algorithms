@@ -9,53 +9,47 @@ package DataStructure.Lists;
  * @author promise
  */
 
-public class CircularLinkedList {
+public class CircularLinkedList implements ICircularSinglyFeatures {
 
-    final class Node {
+    class Node {
 
         int value;
         Node next;
 
-        public Node() {
-        }
-
         public Node(int value) {
             this.value = value;
         }
-
     }
-
+    private int size;
     private Node head;
     private Node tail;
-    private int size;
 
     public CircularLinkedList() {
         this.size = 0;
         this.head = null;
         this.tail = null;
     }
-    
-    //insert at last position of the list
+
+    @Override
     public void insert(int value) {
         Node newNode = new Node(value);
-        if (head == null) {
+        if (isEmpty()) {
             head = tail = newNode;
             newNode.next = head;
             size++;
             return;
         }
         tail.next = newNode;
+        newNode.next = head;
         tail = newNode;
-        tail.next = head;
         size++;
     }
-    
-    public void insertFirst(int value){
+
+    @Override
+    public void insertFirst(int value) {
         Node newNode = new Node(value);
-        if(head == null){
-            head = tail = newNode;
-            newNode.next = head;
-            size++;
+        if (isEmpty()) {
+            insert(value);
             return;
         }
         newNode.next = head;
@@ -64,133 +58,151 @@ public class CircularLinkedList {
         size++;
     }
 
+    @Override
     public void deleteNode(int valueToDelete) {
         if (head == null) {
-            System.out.println("no list exits");
-            return;
+            throw new NullPointerException("empty list");
         } else if (head.value == valueToDelete) {
-            head = head.next;
-            tail.next = head;
-            size--;
+            deleteFirst();
+            return;
+        } else if (tail.value == valueToDelete) {
+            deleteLast();
             return;
         }
 
         Node cur = head;
+        boolean flag = false;
         do {
             if (cur.next.value == valueToDelete) {
-                cur.next = cur.next.next;
-                size--;
+                flag = true;
                 break;
             }
             cur = cur.next;
         } while (cur != head);
+        if (flag) {
+            cur.next = cur.next.next;
+            size--;
+        }else{
+            System.out.println("value in not exists in the list");
+        }
     }
 
+    @Override
     public void deleteFirst() {
+        if (!isEmpty()) {
+            head = head.next;
+            if (head == tail.next) {
+                head = null;
+                tail = null;
+            } else {
+                tail.next = head;
+            }
+            size--;
+        } else {
+            throw new NullPointerException("empty list");
+        }
+    }
+
+    @Override
+    public void deleteLast() {
         if (head == null) {
-            System.out.println("no list exits");
+            throw new NullPointerException("list is empty");
+        }
+        if (head.next == head) {
+            head = tail = null;
+            size--;
             return;
         }
-        head = head.next;
+        Node cur = head;
+        while (cur.next != tail) {
+            cur = cur.next;
+        }
+        tail = cur;
         tail.next = head;
         size--;
     }
 
-    public void deleteLast() {
-        if (head == null) {
-            System.out.println("no list exists");
-            return;
-        }
-        Node cur = head;
-        do {
-            if (cur.next.value == tail.value) {
-                cur.next = tail.next;
-                tail = cur.next;
-                size--;
-                break;
-            }
-            cur = cur.next;
-        } while (cur != head);
-    }
-    
-    
-
+    @Override
     public int getTail() {
-        return this.tail.value;
+        if (!isEmpty()) {
+            return tail.value;
+        }
+        return -1;
     }
 
+    @Override
     public int getHead() {
-        return this.head.value;
+        if (!isEmpty()) {
+            return head.value;
+        }
+        return -1;
     }
 
-    public static CircularLinkedList createCircularLinkedList() {
-
-        CircularLinkedList cll = new CircularLinkedList();
-        cll.insert(10);
-        cll.insert(20);
-
-        return cll;
-    }
-
+    @Override
     public int size() {
         return this.size;
     }
 
+    @Override
     public boolean containsNode(int searchValue) {
         Node cur = head;
-        if (head != null) {
-            do {
-                if (cur.value == searchValue) {
-                    return true;
-                }
-                cur = cur.next;
-            } while (cur != head);
-        } else {
-            System.out.println("no list exists");
-        }
-
+        do {
+            if (cur.value == searchValue) {
+                return true;
+            }
+            cur = cur.next;
+        } while (cur != head);
         return false;
     }
 
     @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    @Override
     public String toString() {
-        Node cur = head;
         StringBuilder sb = new StringBuilder();
-        if (cur != null) {
+        Node cur = head;
+        if (head != null) {
             do {
                 sb.append(cur.value).append("->");
                 cur = cur.next;
             } while (cur != head);
-
             return sb.replace(sb.length() - 2, sb.length(), "").toString();
         }
-        return "no list exits";
+        return "list is empty";
+    }
+
+    public void display() {
+        Node cur = head;
+        if (!isEmpty()) {
+            do {
+                System.out.print(cur.value + " ");
+                cur = cur.next;
+            } while (cur != head);
+        }
     }
 
     public static void main(String[] args) {
-        CircularLinkedList cll = createCircularLinkedList();
-
+        CircularLinkedList cll = new CircularLinkedList();
+        cll.insert(10);
+        cll.insert(20);
+        cll.insertFirst(100);
+        cll.insertFirst(200);
         System.out.println(cll.toString());
-        System.out.println(cll.size());
-
-        cll.insert(30);
-        System.out.println(cll.toString());
-        System.out.println(cll.size());
-
-        cll.deleteFirst();
-        System.out.println(cll.toString());
-        System.out.println(cll.size());
-
+        System.out.println(cll.containsNode(200));
+        System.out.println("size of the list: " + cll.size());
         cll.deleteLast();
+        //cll.deleteLast();
         System.out.println(cll.toString());
-        System.out.println(cll.size());
+        System.out.println("size of the list: " + cll.size());
 
-        System.out.println("tail: " + cll.getTail() + " head: " + cll.getHead());
-
-        cll.insertFirst(30);
-        System.out.println("tail: " + cll.getTail() + " head: " + cll.getHead());
+        cll.deleteNode(100);
+        cll.deleteNode(200);
+        cll.deleteNode(1000);
+        System.out.println("size: " + cll.size());
         System.out.println(cll.toString());
-        System.out.println(cll.size());
 
     }
 

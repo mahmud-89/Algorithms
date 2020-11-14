@@ -10,16 +10,15 @@ package DataStructure.Lists;
  * @author promise
  */
 public interface ICircularSinglyFeatures{
-    void insert();
-    void insertFirst();
+    void insert(int value); // tail
+    void insertFirst(int value);
     void deleteNode(int valueToDelete);
     void deleteFirst();
     void deleteLast();
     int getTail();
     int getHead();
-    CircularLinkedList creaCircularLinkedList();
     int size();
     boolean containsNode(int searchValue);
-    @Override
-    String toString();
+    boolean isEmpty();
+    
 }
