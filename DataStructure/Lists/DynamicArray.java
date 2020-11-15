@@ -119,12 +119,9 @@ public class DynamicArray<E> implements Iterable<E>{
 
         @Override
         public void remove() {
-            
-        }
-
-        @Override
-        public void forEachRemaining(Consumer<? super E> action) {
-            Iterator.super.forEachRemaining(action); //To change body of generated methods, choose Tools | Templates.
+            if(this.cursor<0) throw new IllegalStateException();
+            DynamicArray.this.remove(this.cursor);
+            this.cursor--;
         }
         
     }
