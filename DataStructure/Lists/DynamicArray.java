@@ -56,10 +56,14 @@ public class DynamicArray<E> implements Iterable<E>{
         return getElement(index);
     }
     
-    private E getElement(final int index){
-        return (E) this.elements[index];
+    public int getSize(){
+        return this.size;
     }
-  
+    
+    public boolean isEmpty(){
+        return this.size == 0;
+    }
+    
     public E remove (final int index){
         final E oldElement = getElement(index);
         fastRemove(elements, index);
@@ -76,14 +80,9 @@ public class DynamicArray<E> implements Iterable<E>{
         elements[this.size = newSize] = null;
     }
     
-    public int getSize(){
-        return this.size;
+    private E getElement(final int index){
+        return (E) this.elements[index];
     }
-    
-    public boolean isEmpty(){
-        return this.size == 0;
-    }
-    
     
     @Override
     public Iterator<E> iterator() {
