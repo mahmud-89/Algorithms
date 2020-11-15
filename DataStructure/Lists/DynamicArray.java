@@ -11,7 +11,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 
-
 /**
  *
  * @author promise
@@ -74,11 +73,6 @@ public class DynamicArray<E> implements Iterable<E>{
     
     private void fastRemove(final Object[] elements,final int index){
         final int newSize = this.size - 1;
-        
-        if(index>=getSize()){
-            throw new NoSuchElementException("no element found at this position");
-        }
-        
         if(newSize>index){
             System.arraycopy(elements, index+1, elements, index, newSize - index);
         }   
@@ -106,10 +100,10 @@ public class DynamicArray<E> implements Iterable<E>{
 
         @Override
         public E next() {
-            if(this.cursor >= DynamicArray.this.size) 
+            if(this.cursor > DynamicArray.this.size) 
                 throw new NoSuchElementException();
             
-            if(this.cursor >= DynamicArray.this.elements.length)
+            if(this.cursor > DynamicArray.this.elements.length)
                 throw new ConcurrentModificationException();
         
             final E element = DynamicArray.this.getElement(this.cursor);
@@ -134,13 +128,18 @@ public class DynamicArray<E> implements Iterable<E>{
         DynamicArray<String> names = new DynamicArray<>();
         names.add("promise");
         names.add("mashrur");
-        names.add("tauhid");
-
+        
+        for(String name: names){
+            System.out.println(name);
+        }
+        System.out.println("");
+        
+        names.remove(0);
+        
         Iterator<String> itr = names.iterator();
         while(itr.hasNext()){
             System.out.println(itr.next());
         }
-        
         
     }
     
