@@ -141,11 +141,6 @@ public class DynamicArray<E> implements Iterable<E>{
             System.out.println(itr.next());
         }
         
-        System.out.println(names.get(0));
-        
-        String[] x = new String[10];
-        System.out.println(x[1]);
-        
     }
     
 }
