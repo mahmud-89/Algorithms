@@ -122,22 +122,27 @@ class MyMap<K, V> {
     public void remove(K key){
         int bucketIndex = getBucketIndex(key);
         HashNode<K,V> head = bucketArray.get(bucketIndex);
-        if(head.key.equals(key)){
-            head = head.next;
-            bucketArray.set(bucketIndex, head);
-            return;
-        }else{
-            while(head != null){
-                if(head.next.key.equals(key)){
-                    head.next = head.next.next;
-                    return;
-                }
-                head = head.next;
-            }
+        HashNode<K,V> prev = null;
+        
+        if(head == null){
+            throw new NullPointerException("key does not exist in the list! ");
         }
         
-        throw new NoSuchElementException("key does not exist in the list");
+        while(head!=null){
+            if(head.key.equals(key)){
+                break;
+            }
+            prev = head;
+            head = head.next;
+        }
         
+        if(prev != null){
+            prev.next = head.next;
+        }else{
+            bucketArray.set(bucketIndex, head.next);
+        }
+        size--;
+       
     }
 
     public int getSize() {
@@ -154,7 +159,7 @@ class MyMap<K, V> {
             throw new NullPointerException("empty list");
         }
         while(head != null){
-            System.out.println("traverse: "+ head.value);
+            System.out.println("traversed: "+ head.value);
             head = head.next;
         }
     }
@@ -170,8 +175,12 @@ class Runner {
         map.add(30, "shakil");
         map.add(40, "sazeeb");
         map.add(50, "prinon");
+        
+        
         map.remove(10);
         map.remove(20);
+        
+        System.out.println("size of the list: "+map.getSize());
         map.traverse(0);
        
         //System.out.println(map.get(30));
