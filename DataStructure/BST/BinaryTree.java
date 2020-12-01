@@ -8,17 +8,6 @@ package DataStructure.BST;
  *
  * @author promise
  */
-class Node {
-
-    int val;
-    Node left, right;
-
-    public Node(int val) {
-        this.val = val;
-        left = right = null;
-    }
-}
-
 public class BinaryTree {
 
     Node root;
