@@ -93,8 +93,8 @@ public class BSTRecursive {
      * .........................Traversing the tree......................
      * @param args 
      */
-    //BFS
-    public void levelOrderBFS(Node root){
+    //LevelOrder (BFS)
+    public void levelorderBFS(Node root){
         GenericQueue<Node> queue = new GenericQueue<>();
         if(root == null){
             System.out.println("empty tree!!!");
@@ -114,10 +114,49 @@ public class BSTRecursive {
         }
         System.out.println("");
     }
-
+    
+    //preorder(DFS)
+    public void preorderDFS(Node root){
+        if(root == null){
+            return;
+        }
+        System.out.print(root.val+" ");
+        preorderDFS(root.left);
+        preorderDFS(root.right);
+    }
+    
+    //in-order(DFS)
+    public void inorderDFS(Node root){
+        if(root == null){
+            return;
+        }
+        inorderDFS(root.left);
+        System.out.print(root.val+" ");
+        inorderDFS(root.right);
+    }
+    
+    //post-order(DFS)
+    public void postorderDFS(Node root){
+        if(root == null){
+            return;
+        }
+        postorderDFS(root.left);
+        postorderDFS(root.right);
+        System.out.print(root.val+" ");
+    }
     
     public static void main(String[] args) {
         BSTRecursive bt = new BSTRecursive();
+         /*
+              50 
+           /     \ 
+          30      130 
+         /  \    /   \ 
+       20   40  127  135 
+            /
+           35
+        */
+         
         bt.insert(50);
         bt.insert(130);
         bt.insert(135);
@@ -134,7 +173,25 @@ public class BSTRecursive {
         System.out.println("maximum value is: "+ bt.getMax(bt.getRoot()).val);
         System.out.println("height of the tree is : "+ bt.getTreeHeight(bt.getRoot()));
         System.out.println("");
+        
+        //printing levelorder
         System.out.print("level traversing by bfs: ");
-        bt.levelOrderBFS(bt.getRoot());
+        bt.levelorderBFS(bt.getRoot());
+        
+        //printing preorder
+        System.out.print("pre-order traversing : ");
+        bt.preorderDFS(bt.getRoot());
+        System.out.println();
+        
+        //printing inorder
+        System.out.print("in-order traversing : ");
+        bt.inorderDFS(bt.getRoot());
+        System.out.println("");
+        
+         //printing post - order
+        System.out.print("post-order traversing : ");
+        bt.postorderDFS(bt.getRoot());
+        System.out.println("");
+        
     }
 }
