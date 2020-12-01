@@ -14,8 +14,6 @@ import DataStructure.Queues.GenericQueue;
 public class BSTRecursive {
 
     private Node root;
-    String name = "promise";
-    private String age = "20";
 
     public BSTRecursive() {
         this.root = null;
@@ -95,7 +93,7 @@ public class BSTRecursive {
      * .........................Traversing the tree......................
      * @param args 
      */
-    
+    //BFS
     public void levelOrderBFS(Node root){
         GenericQueue<Node> queue = new GenericQueue<>();
         if(root == null){
@@ -116,9 +114,8 @@ public class BSTRecursive {
         }
         System.out.println("");
     }
-        
-    
 
+    
     public static void main(String[] args) {
         BSTRecursive bt = new BSTRecursive();
         bt.insert(50);
