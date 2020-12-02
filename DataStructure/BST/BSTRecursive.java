@@ -10,6 +10,7 @@ package DataStructure.BST;
  * @author promise
  */
 import DataStructure.Queues.GenericQueue;
+import com.sun.org.apache.xpath.internal.axes.HasPositionalPredChecker;
 
 public class BSTRecursive {
 
@@ -90,6 +91,40 @@ public class BSTRecursive {
 
     public Node getRoot() {
         return this.root;
+    }
+    
+    public boolean isBST(Node root){
+        if(root == null){
+            return true;
+        }
+        if(!isBST(root.left)){
+            return false;
+        }
+        if(!isBST(root.right)){
+            return false;
+        }
+        return isNodeGreaterThanChild(root);
+    }
+    
+    private boolean isNodeGreaterThanChild(Node node){
+        System.out.println("value: "+node.val);
+        if(node.left == null && node.right == null) return true;
+        
+        if(node.left != null && node.right!=null){
+            if(node.val < node.right.val && node.val >=  node.left.val){
+                return true;
+            }
+        }else if(node.left != null && node.right == null){
+            if(node.val >= node.left.val){
+                return true;
+            }
+        }else if(node.left == null && node.right != null){
+            if(node.val < node.right.val){
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     /**
@@ -200,6 +235,9 @@ public class BSTRecursive {
         System.out.print("post-order traversing : ");
         bst.postorderDFS(bst.getRoot());
         System.out.println("");
+        
+        //checking isBST method
+        System.out.println(bst.isBST(bst.getRoot()));
         
     }
 }
