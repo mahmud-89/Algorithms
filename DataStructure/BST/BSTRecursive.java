@@ -27,32 +27,35 @@ public class BSTRecursive {
      * @param val 
      */
 
-    public void insert(int val) {
-        this.root = insertRec(root, val);
-    }
+   public void insert(int val){
+       this.root = inserting(this.root,val);
+   }
+   
+   private Node inserting(Node root,int val){
+       if(root == null){
+           root = new Node(val);
+           return root;
+       }
+       else if(val > root.val){
+           root.right = inserting(root.right, val);
+       }
+       else{
+           root.left = inserting(root.left, val);
+       }
+       return root;
+       
+   }
 
-    private Node insertRec(Node root, int val) {
-        if(root == null){
-            root = new Node(val);
+    public Node search(Node root,int val){
+        if(root.val == val || root == null){
             return root;
         }
         else if(val > root.val){
-            root.right = insertRec(root.right, val);
+           return  search(root.right, val);
         }
-        else{
-            root.left = insertRec(root.left, val);
+        else {
+            return search(root.left, val);
         }
-        return root;
-    }
-
-    public Node search(Node root, int val) {
-        if(root == null || root.val == val){
-            return root;
-        }
-        else if (val > root.val){
-            return search(root.right, val);
-        }
-        else return search(root.left, val);
     }
     
     /**
@@ -146,7 +149,7 @@ public class BSTRecursive {
     }
     
     public static void main(String[] args) {
-        BSTRecursive bt = new BSTRecursive();
+        BSTRecursive bst = new BSTRecursive();
          /*
               50 
            /     \ 
@@ -155,45 +158,47 @@ public class BSTRecursive {
        20   40  127  135 
             /
            35
-        pre - 50 30 20 40 35 130 127 135 
-        in - 20 30 35 40 50 127 130 135
-        post - 20 35 40 30 127 135 130 50 
+        # LRD --> L-left --> R-right --> D-root(visited or process data or printing data)
+        
+        pre - 50 30 20 40 35 130 127 135 (D->L->R)
+        in - 20 30 35 40 50 127 130 135 (L->D->R)
+        post - 20 35 40 30 127 135 130 50 (L->R->D)
         */
          
-        bt.insert(50);
-        bt.insert(130);
-        bt.insert(135);
-        bt.insert(127);
-        bt.insert(30);
-        bt.insert(20);
-        bt.insert(40);
-        bt.insert(35);
+        bst.insert(50);
+        bst.insert(130);
+        bst.insert(135);
+        bst.insert(127);
+        bst.insert(30);
+        bst.insert(20);
+        bst.insert(40);
+        bst.insert(35);
 
         int search = 20;
-        System.out.println(bt.search(bt.getRoot(), search) != null ? 
+        System.out.println(bst.search(bst.getRoot(), search) != null ? 
                 String.format("%d is found", search):String.format("%d is not found", search));
-        System.out.println("minimum value is: "+ bt.getMin(bt.getRoot()).val);
-        System.out.println("maximum value is: "+ bt.getMax(bt.getRoot()).val);
-        System.out.println("height of the tree is : "+ bt.getTreeHeight(bt.getRoot()));
+        System.out.println("minimum value is: "+ bst.getMin(bst.getRoot()).val);
+        System.out.println("maximum value is: "+ bst.getMax(bst.getRoot()).val);
+        System.out.println("height of the tree is : "+ bst.getTreeHeight(bst.getRoot()));
         System.out.println("");
         
         //printing levelorder
         System.out.print("level traversing by bfs: ");
-        bt.levelorderBFS(bt.getRoot());
+        bst.levelorderBFS(bst.getRoot());
         
         //printing preorder
         System.out.print("pre-order traversing : ");
-        bt.preorderDFS(bt.getRoot());
+        bst.preorderDFS(bst.getRoot());
         System.out.println();
         
         //printing inorder
         System.out.print("in-order traversing : ");
-        bt.inorderDFS(bt.getRoot());
+        bst.inorderDFS(bst.getRoot());
         System.out.println("");
         
          //printing post - order
         System.out.print("post-order traversing : ");
-        bt.postorderDFS(bt.getRoot());
+        bst.postorderDFS(bst.getRoot());
         System.out.println("");
         
     }
