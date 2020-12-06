@@ -10,7 +10,7 @@ package DataStructure.Graph;
  * @author promise
  */
 import DataStructure.Queues.GenericQueue;
-import DataStructure.Stacks.StackArrayList;
+import DataStructure.Stack.StackArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -57,7 +57,38 @@ public class Graph {
         }
         return false;
     }
+    
+    public boolean hasCycle(int startingVertex,boolean[] discoverd, boolean bidirectional){
+        if(bidirectional){
+            return false;
+        }
+        discoverd[startingVertex] = true;
+        for(Integer val : this.map.get(startingVertex)){
+            System.out.print("value of : "+ val);
+            if(discoverd[val] == true) return true;
+            if(!discoverd[val]){
+                return hasCycle(val, discoverd, bidirectional);
+            }
+        }
+        return false;
+    }
 
+    public int sizeOfVertices() {
+        return this.map.keySet().size();
+    }
+    
+    public int sizeOfEdges(boolean bidirectional){
+        int counter = 0;
+        for(int i = 0;i<sizeOfVertices();i++){
+            counter+=this.map.get(i).size();
+        }
+        if(bidirectional){
+            return counter/2;
+        }
+        
+        return counter;
+    }
+    
     public void printGraph() {
         for (Map.Entry<Integer, ArrayList<Integer>> entry : map.entrySet()) {
             Integer vertex = entry.getKey();
@@ -69,9 +100,6 @@ public class Graph {
         }
     }
 
-    public int sizeOfVertices() {
-        return this.map.keySet().size();
-    }
 
     public void traverseBFS(int startingVertex) {
         GenericQueue<Integer> queue = new GenericQueue<>();
@@ -119,7 +147,6 @@ public class Graph {
         discoverd[startingVertex] = true;
         for(Integer val : this.map.get(startingVertex)){
             if(!discoverd[val]){
-                discoverd[val] = true;
                 traverseRecursiveDFS(val, discoverd);
             }
         }
@@ -135,19 +162,25 @@ class Runner {
         Graph g = new Graph();
         boolean bidirectional = false;
         g.addEdge(1, 0, bidirectional);
-        g.addEdge(0, 2, bidirectional);
-        g.addEdge(2, 1, bidirectional);
         g.addEdge(0, 3, bidirectional);
+        g.addEdge(2, 1, bidirectional);
+        g.addEdge(0, 2, bidirectional);
         g.addEdge(1, 4, bidirectional);
         g.printGraph();
         System.out.println("size of vertices: " + g.sizeOfVertices());
+        
         g.traverseBFS(1);
         g.traverseDFS(0);
+        
+        //recursive dfs
         boolean discoverd[] = new boolean[g.sizeOfVertices()];
         int startingVertex = 0;
         System.out.printf("DFS traversing from %d: ",startingVertex);
         g.traverseRecursiveDFS(startingVertex,discoverd);
-
+        System.out.println("");
+        
+        System.out.println("number of edges: " + g.sizeOfEdges(bidirectional));
+        System.out.println("has cycle? : "+g.hasCycle(startingVertex, discoverd, bidirectional));
     }
 }
 
