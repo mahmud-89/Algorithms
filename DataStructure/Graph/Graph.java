@@ -58,18 +58,38 @@ public class Graph {
         return false;
     }
     
-    public boolean hasCycle(int startingVertex,boolean[] discoverd, boolean bidirectional){
-        if(bidirectional){
+    public boolean hasCycle(){
+        boolean visited[] = new boolean[sizeOfVertices()];
+        boolean recStack[] = new boolean[sizeOfVertices()];
+        for(int i = 0;i<sizeOfVertices();i++){
+            if(hasCycleUtil(i, visited, recStack)){
+                System.out.println("cycle found when starting v is: "+i);
+                return true;
+            }
+            System.out.println("rejected: "+i);
+        }
+        return false;
+    }
+    
+    public boolean hasCycleUtil(int v,boolean visited[],boolean recStack[]){
+        if(recStack[v]){
+            //for(boolean b: recStack) System.out.println("value of recStack: "+b);
+            System.out.println("recStack base: "+v);
+            return true;
+        }
+        if(visited[v]){
+            System.out.println("visited base: "+v);
             return false;
         }
-        discoverd[startingVertex] = true;
-        for(Integer val : this.map.get(startingVertex)){
-            System.out.print("value of : "+ val);
-            if(discoverd[val] == true) return true;
-            if(!discoverd[val]){
-                return hasCycle(val, discoverd, bidirectional);
+        recStack[v] = true;
+        visited[v] = true;
+        for(int val : this.map.get(v)){
+            if(hasCycleUtil(val, visited, recStack)){
+                return true;
             }
         }
+        System.out.println("outer loop: "+ v);
+        recStack[v] = false;
         return false;
     }
 
@@ -151,9 +171,6 @@ public class Graph {
             }
         }
     }
- 
-   
-
 }
 
 class Runner {
@@ -161,11 +178,16 @@ class Runner {
     public static void main(String[] args) {
         Graph g = new Graph();
         boolean bidirectional = false;
-        g.addEdge(1, 0, bidirectional);
-        g.addEdge(0, 3, bidirectional);
-        g.addEdge(2, 1, bidirectional);
         g.addEdge(0, 2, bidirectional);
+        g.addEdge(1, 0, bidirectional);
         g.addEdge(1, 4, bidirectional);
+        g.addEdge(4, 3, bidirectional);
+        g.addEdge(3, 1, bidirectional);
+        
+//        g.addEdge(2, 0, bidirectional);
+//        g.addEdge(2, 3, bidirectional);
+//        g.addEdge(3, 3, bidirectional);
+        
         g.printGraph();
         System.out.println("size of vertices: " + g.sizeOfVertices());
         
@@ -180,7 +202,10 @@ class Runner {
         System.out.println("");
         
         System.out.println("number of edges: " + g.sizeOfEdges(bidirectional));
-        System.out.println("has cycle? : "+g.hasCycle(startingVertex, discoverd, bidirectional));
+        System.out.println("\n\nchecking cycle...");
+        System.out.println("has cycle? : "+g.hasCycle());
+        
+       
     }
 }
 
