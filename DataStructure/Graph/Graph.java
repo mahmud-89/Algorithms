@@ -129,9 +129,21 @@ public class Graph {
 
         return false;
     }
+
     //approach-2(Dfs)
-    public boolean hasCycleUndirectedUtilDFS(int v, boolean visited,int parent){
-        
+    public boolean hasCycleUndirectedUtilDFS(int v, boolean visited[], int parent) {
+        visited[v] = true;
+        for (Integer val : this.map.get(v)) {
+            System.out.println("value of adj: "+val);
+            if (!visited[val]) {
+                if (hasCycleUndirectedUtilDFS(val, visited, v)) {
+                    return true;
+                }
+            }else if(val != parent){
+                System.out.println("val : "+val +" parent "+ parent);
+                return true;
+            }
+        }
         return false;
     }
 
@@ -259,10 +271,11 @@ class Runner {
         g.addEdge(2, 5, bidirectional);
         g.addEdge(1, 4, bidirectional);
         g.addEdge(1, 3, bidirectional);
-        //g.addEdge(3, 4, bidirectional);
-       
+        g.addEdge(3, 4, bidirectional);
 
-        System.out.println("has cycle?" + g.hasCycleUndirectedUtilBFS(0));
+        //System.out.println("has cycle?" + g.hasCycleUndirectedUtilBFS(0));
+        discoverd = new boolean[g.sizeOfVertices()];
+        System.out.println("has cycle? : " + g.hasCycleUndirectedUtilDFS(0, discoverd, -1));
 
     }
 }
