@@ -134,7 +134,6 @@ public class Graph {
     public boolean hasCycleUndirectedUtilDFS(int v, boolean visited[], int parent) {
         visited[v] = true;
         for (Integer val : this.map.get(v)) {
-            System.out.println("value of adj: "+val);
             if (!visited[val]) {
                 if (hasCycleUndirectedUtilDFS(val, visited, v)) {
                     return true;
@@ -273,7 +272,18 @@ class Runner {
         g.addEdge(1, 3, bidirectional);
         g.addEdge(3, 4, bidirectional);
 
-        //System.out.println("has cycle?" + g.hasCycleUndirectedUtilBFS(0));
+        System.out.println("has cycle?" + g.hasCycleUndirectedUtilBFS(0));
+        
+        System.out.println("\n\nclearing graph...");
+        g.clearGraph();
+        bidirectional = true;
+        g.addEdge(0, 1, bidirectional);
+        g.addEdge(0, 2, bidirectional);
+        g.addEdge(2, 5, bidirectional);
+        g.addEdge(1, 4, bidirectional);
+        g.addEdge(1, 3, bidirectional);
+        g.addEdge(3, 4, bidirectional);
+        
         discoverd = new boolean[g.sizeOfVertices()];
         System.out.println("has cycle? : " + g.hasCycleUndirectedUtilDFS(0, discoverd, -1));
 
