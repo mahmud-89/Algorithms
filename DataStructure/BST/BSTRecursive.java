@@ -10,7 +10,6 @@ package DataStructure.BST;
  * @author promise
  */
 import DataStructure.Queues.GenericQueue;
-import com.sun.org.apache.xpath.internal.axes.HasPositionalPredChecker;
 
 public class BSTRecursive {
 

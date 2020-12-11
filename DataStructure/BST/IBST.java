@@ -13,7 +13,7 @@ public interface IBST {
 
     void insert(int value);
 
-    Node search(int value);
+    boolean search(int value);
 
     Node getMin(Node root);
 
