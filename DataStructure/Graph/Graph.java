@@ -62,7 +62,13 @@ public class Graph {
     public boolean hasCycle(boolean bidirectional) {
         boolean visited[] = new boolean[sizeOfVertices()];
         if (bidirectional) {
-
+            for(int i = 0;i<sizeOfVertices();i++){
+                if(!visited[i]){
+                    if(hasCycleUndirectedUtilDFS(i, visited, -1)){
+                        return true;
+                    }
+                }
+            }
         } else {
             boolean recStack[] = new boolean[sizeOfVertices()];
             for (int i = 0; i < sizeOfVertices(); i++) {
@@ -75,7 +81,8 @@ public class Graph {
         }
         return false;
     }
-
+    
+    //dfs-[directed]
     public boolean hasCycleDirectedUtil(int v, boolean visited[], boolean recStack[]) {
         if (recStack[v]) {
             System.out.println("recStack base: " + v);
@@ -100,7 +107,7 @@ public class Graph {
         return false;
     }
 
-    //approach-1(bfs)
+    //approach-1(bfs)[undirected]
     public boolean hasCycleUndirectedUtilBFS(int v) {
         boolean visited[] = new boolean[sizeOfVertices()];
         int flag[] = new int[sizeOfVertices()];
@@ -130,7 +137,7 @@ public class Graph {
         return false;
     }
 
-    //approach-2(Dfs)
+    //approach-2(Dfs)[undirected]
     public boolean hasCycleUndirectedUtilDFS(int v, boolean visited[], int parent) {
         visited[v] = true;
         for (Integer val : this.map.get(v)) {
