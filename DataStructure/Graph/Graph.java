@@ -21,7 +21,7 @@ import java.util.Stack;
 
 public class Graph {
 
-    Map<Integer, ArrayList<Integer>> map;
+    Map<Integer,ArrayList<Integer>> map;
 
     public Graph() {
         map = new HashMap<>();
@@ -76,7 +76,7 @@ public class Graph {
                     System.out.println("cycle found when starting v is: " + i);
                     return true;
                 }
-                System.out.println("rejected :" + i);
+                //System.out.println("rejected :" + i);
             }
         }
         return false;
@@ -85,11 +85,11 @@ public class Graph {
     //dfs-[directed]
     public boolean hasCycleDirectedUtil(int v, boolean visited[], boolean recStack[]) {
         if (recStack[v]) {
-            System.out.println("recStack base: " + v);
+            //System.out.println("recStack base: " + v);
             return true;
         }
         if (visited[v]) {
-            System.out.println("visited base: " + v);
+            //System.out.println("visited base: " + v);
             return false;
         }
         recStack[v] = true;
@@ -102,7 +102,7 @@ public class Graph {
                 return true;
             }
         }
-        System.out.println("outer loop: " + v);
+        //System.out.println("outer loop: " + v);
         recStack[v] = false;
         return false;
     }
@@ -167,6 +167,10 @@ public class Graph {
         }
 
         return counter;
+    }
+    
+    public Map getMap(){
+        return this.map;
     }
 
     public void clearGraph() {
