@@ -106,6 +106,7 @@ public class TropologicalSortDemo {
         }
         System.out.println("");
     }
+    
 }
 
 class Driver{
@@ -116,7 +117,7 @@ class Driver{
         ts.tropologicalSort();
         System.out.println("");
         
-        System.out.print("indegree approach(kahn's algo): ");
+        System.out.print("indegree approach (kahn's algo): ");
         ts.toposort();
         System.out.println("");
     }
