@@ -22,169 +22,181 @@ public class BSTRecursive {
     public BSTRecursive(int val) {
         this.root = new Node(val);
     }
+
     /**
      * .....................manipulation......................
-     * @param val 
+     *
+     * @param val
      */
 
-   public void insert(int val){
-       this.root = inserting(this.root,val);
-   }
-   
-   private Node inserting(Node root,int val){
-       if(root == null){
-           root = new Node(val);
-           return root;
-       }
-       else if(val > root.val){
-           root.right = inserting(root.right, val);
-       }
-       else{
-           root.left = inserting(root.left, val);
-       }
-       return root;
-       
-   }
+    public void insert(int val) {
+        this.root = insertUtil(this.root, val);
+    }
+    private Node insertUtil(Node root, int val) {
 
-    public Node search(Node root,int val){
-        if(root.val == val || root == null){
+        if (root == null) {
+            root = new Node(val);
             return root;
+        } else if (val > root.val) {
+            root.right = insertUtil(root.right, val);
+        } else {
+            root.left = insertUtil(root.left, val);
         }
-        else if(val > root.val){
-           return  search(root.right, val);
-        }
-        else {
+        return root;
+
+    }
+
+    public Node search(Node root, int val) {
+        if (root.val == val || root == null) {
+            return root;
+        } else if (val > root.val) {
+            return search(root.right, val);
+        } else {
             return search(root.left, val);
         }
     }
     
-    /**
-     * .................Utilities....................
-     * @param root
-     * @return 
-     */
-    
-    public Node getMin(Node root){
-        if(root.left == null){
+    public Node delete(Node root,int val){
+        return  this.root = deleteUtil(root, val);
+    }
+    private Node deleteUtil(Node root,int val){
+        if(root == null){
             return root;
-        }else return getMin(root.left);
+        }else if(val > root.val){
+            root.right = delete(root.right, val);
+        }else if(val < root.val){
+            root.left = delete(root.left, val);
+        }else{
+            if(root.left == null && root.right == null){
+                return null;
+            }
+            else if(root.right == null){
+                return root.left;
+            }else if(root.left == null){
+                return root.right;
+            }else{
+                Node temp = getMin(root.right);
+                root.right = deleteUtil(root.right, temp.val);
+                temp.right = root.right;
+                temp.left = root.left;
+                return temp;
+            }
+        }
+        return root;
     }
     
-    public Node getMax(Node root){
-        if(root.right == null){
+    /**
+     * .................Utilities....................
+     *
+     * @param root
+     * @return
+     */
+    public Node getMin(Node root) {
+        if (root.left == null) {
             return root;
+        } else {
+            return getMin(root.left);
         }
-        else{
+    }
+
+    public Node getMax(Node root) {
+        if (root.right == null) {
+            return root;
+        } else {
             return getMax(root.right);
         }
     }
-    
-    public int getTreeHeight(Node root){
-      if(root == null){
-          return -1;
-      }
-      int left = getTreeHeight(root.left);
-      int right = getTreeHeight(root.right);
-      return Integer.max(left, right) + 1;
+
+    public int getTreeHeight(Node root) {
+        if (root == null) {
+            return -1;
+        }
+        int left = getTreeHeight(root.left);
+        int right = getTreeHeight(root.right);
+        return Integer.max(left, right) + 1;
     }
 
     public Node getRoot() {
         return this.root;
     }
-    
-    public boolean isBST(Node root){
+
+    public boolean isBST(Node root) {
+        Integer MAX = Integer.MAX_VALUE;
+        Integer MIN = Integer.MIN_VALUE;
+        return isBSTUtil(root, MAX, MIN);
+    }
+    private boolean isBSTUtil(Node root,Integer MAX,Integer MIN){
         if(root == null){
             return true;
         }
-        if(!isBST(root.left)){
-            return false;
+        if(root.val > MIN && root.val < MAX
+                && isBSTUtil(root.left, root.val, MIN)
+                && isBSTUtil(root.right, MAX, root.val)){
+            return true;
         }
-        if(!isBST(root.right)){
-            return false;
-        }
-        return isNodeGreaterThanChild(root);
-    }
-    
-    private boolean isNodeGreaterThanChild(Node node){
-        System.out.println("value: "+node.val);
-        if(node.left == null && node.right == null) return true;
-        
-        if(node.left != null && node.right!=null){
-            if(node.val < node.right.val && node.val >=  node.left.val){
-                return true;
-            }
-        }else if(node.left != null && node.right == null){
-            if(node.val >= node.left.val){
-                return true;
-            }
-        }else if(node.left == null && node.right != null){
-            if(node.val < node.right.val){
-                return true;
-            }
-        }
-        
         return false;
     }
-    
+
     /**
      * .........................Traversing the tree......................
-     * @param args 
+     *
+     * @param args
      */
     //LevelOrder (BFS)
-    public void levelorderBFS(Node root){
+    public void levelorderBFS(Node root) {
         GenericQueue<Node> queue = new GenericQueue<>();
-        if(root == null){
+        if (root == null) {
             System.out.println("empty tree!!!");
             return;
         }
         queue.enqueue(root);
-        while(!queue.isEmpty()){
+        while (!queue.isEmpty()) {
             Node visited = queue.dequeue();
-            System.out.print(visited.val+" ");
-            
-            if(visited.left != null){
+            System.out.print(visited.val + " ");
+
+            if (visited.left != null) {
                 queue.enqueue(visited.left);
             }
-            if(visited.right != null){
+            if (visited.right != null) {
                 queue.enqueue(visited.right);
             }
         }
         System.out.println("");
     }
-    
+
     //preorder(DFS)
-    public void preorderDFS(Node root){
-        if(root == null){
+    public void preorderDFS(Node root) {
+        if (root == null) {
             return;
         }
-        System.out.print(root.val+" ");
+        System.out.print(root.val + " ");
         preorderDFS(root.left);
         preorderDFS(root.right);
     }
-    
+
     //in-order(DFS)
-    public void inorderDFS(Node root){
-        if(root == null){
+    public void inorderDFS(Node root) {
+        if (root == null) {
             return;
         }
         inorderDFS(root.left);
-        System.out.print(root.val+" ");
+        System.out.print(root.val + " ");
         inorderDFS(root.right);
     }
-    
+
     //post-order(DFS)
-    public void postorderDFS(Node root){
-        if(root == null){
+    public void postorderDFS(Node root) {
+        if (root == null) {
             return;
         }
         postorderDFS(root.left);
         postorderDFS(root.right);
-        System.out.print(root.val+" ");
+        System.out.print(root.val + " ");
     }
-    
+
     public static void main(String[] args) {
         BSTRecursive bst = new BSTRecursive();
-         /*
+        /*
               50 
            /     \ 
           30      130 
@@ -197,8 +209,8 @@ public class BSTRecursive {
         pre - 50 30 20 40 35 130 127 135 (D->L->R)
         in - 20 30 35 40 50 127 130 135 (L->D->R)
         post - 20 35 40 30 127 135 130 50 (L->R->D)
-        */
-         
+         */
+
         bst.insert(50);
         bst.insert(130);
         bst.insert(135);
@@ -209,34 +221,44 @@ public class BSTRecursive {
         bst.insert(35);
 
         int search = 20;
-        System.out.println(bst.search(bst.getRoot(), search) != null ? 
-                String.format("%d is found", search):String.format("%d is not found", search));
-        System.out.println("minimum value is: "+ bst.getMin(bst.getRoot()).val);
-        System.out.println("maximum value is: "+ bst.getMax(bst.getRoot()).val);
-        System.out.println("height of the tree is : "+ bst.getTreeHeight(bst.getRoot()));
+        System.out.println(bst.search(bst.getRoot(), search) != null
+                ? String.format("%d is found", search) : String.format("%d is not found", search));
+        System.out.println("minimum value is: " + bst.getMin(bst.getRoot()).val);
+        System.out.println("maximum value is: " + bst.getMax(bst.getRoot()).val);
+        System.out.println("height of the tree is : " + bst.getTreeHeight(bst.getRoot()));
         System.out.println("");
-        
+
         //printing levelorder
         System.out.print("level traversing by bfs: ");
         bst.levelorderBFS(bst.getRoot());
-        
+
         //printing preorder
         System.out.print("pre-order traversing : ");
         bst.preorderDFS(bst.getRoot());
         System.out.println();
-        
+
         //printing inorder
         System.out.print("in-order traversing : ");
         bst.inorderDFS(bst.getRoot());
         System.out.println("");
-        
-         //printing post - order
+
+        //printing post - order
         System.out.print("post-order traversing : ");
         bst.postorderDFS(bst.getRoot());
         System.out.println("");
-        
+
         //checking isBST method
-        System.out.println(bst.isBST(bst.getRoot()));
+        System.out.println("is bst? "+bst.isBST(bst.getRoot()));
         
+        int deleteNode = 50;
+        System.out.println("deleting a node: "+deleteNode);
+        bst.delete(bst.getRoot(), deleteNode);
+        
+         //printing inorder
+        System.out.print("in-order traversing : ");
+        bst.inorderDFS(bst.getRoot());
+        System.out.println("");
+        
+
     }
 }
