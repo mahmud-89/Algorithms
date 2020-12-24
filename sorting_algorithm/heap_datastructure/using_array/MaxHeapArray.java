@@ -106,12 +106,17 @@ public class MaxHeapArray {
         return popped;
     }
     
-    public void print() {
-        //go into every non-leaf elements in the array
-        for (int i = 1; i <= size / 2; i++) {
-            System.out.print(" PARENT : " + Heap[i] + " LEFT CHILD : "
+    public void print(){
+        for(int i = 1;i<= size/2;i++){
+            if(leftChild(i) <= size && rightChild(i) <= size){
+                System.out.print(" PARENT : " + Heap[i] + " LEFT CHILD : "
                     + Heap[2 * i] + " RIGHT CHILD :" + Heap[2 * i + 1]);
-            System.out.println();
+            }else if(leftChild(i) <= size){
+                
+                System.out.print(" PARENT : " + Heap[i] + " LEFT CHILD : "
+                    + Heap[2 * i]);
+            }
+            System.out.println("");
         }
     }
     
@@ -143,6 +148,7 @@ public class MaxHeapArray {
         maxHeap.print();
         System.out.println("The max val is "+ maxHeap.extractMax());
         maxHeap.maxHeap();
+        maxHeap.print();
         
         System.out.println(Arrays.toString(maxHeap.getHeap()));
     }
