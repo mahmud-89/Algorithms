@@ -70,7 +70,7 @@ public class MaxHeapArray {
             if(Heap[left] > Heap[right] && Heap[left] > Heap[pos]){
                 swap(left, pos);
                 maxHeapify(left);
-            }else{
+            }else if (Heap[right] > Heap[pos])  {
                 swap(right, pos);
                 maxHeapify(right);
             }
@@ -101,7 +101,8 @@ public class MaxHeapArray {
         int popped = Heap[1];
         swap(1, size);
         size--;
-        maxHeapify(1);
+        //disble maxHeapify here due to used maxHeap() builder function.
+       // maxHeapify(1);
         return popped;
     }
     
@@ -113,6 +114,15 @@ public class MaxHeapArray {
             System.out.println();
         }
     }
+    
+    // Function to remove and return the minimum 
+    // element from the heap 
+    public void maxHeap(){
+        for(int pos = (size/2); pos>=1 ;pos-- ){
+            maxHeapify(pos);
+        }
+    }
+    
     public int [] getHeap(){
         return this.Heap;
     }
@@ -132,7 +142,7 @@ public class MaxHeapArray {
         
         maxHeap.print();
         System.out.println("The max val is "+ maxHeap.extractMax());
-        maxHeap.print();
+        maxHeap.maxHeap();
         
         System.out.println(Arrays.toString(maxHeap.getHeap()));
     }
